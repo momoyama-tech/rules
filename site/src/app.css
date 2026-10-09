@@ -1030,3 +1030,26 @@ button {
 		font-size: 28pt;
 	}
 }
+
+.preview-banner {
+	padding: 12px 5%;
+	background: #fff0ce;
+	color: #503b13;
+	display: flex;
+	gap: 12px;
+	flex-wrap: wrap;
+	font-size: 0.85rem;
+	border-bottom: 1px solid #d9ba72;
+}
+.preview-banner a {
+	margin-left: auto;
+	color: inherit;
+	text-decoration: underline;
+}
+@media print {
+	.preview-banner {
+		display: block;
+		background: none;
+		border: 2px solid #555;
+	}
+}

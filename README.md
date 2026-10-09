@@ -119,3 +119,8 @@ SvelteKitのstatic adapterで全ページを事前生成します。サーバー
 初回公開は別途承認後に行います。管理チェックリストを完了し、Pages SourceをGitHub Actionsにし、`github-pages` environmentをSelected branchesで明示的に `main` のみに制限します。Repository variable `PAGES_ENABLED` を `true` にして、`Deploy Pages` を `main` から手動実行します。変数が未設定なら公開ジョブは動きません。
 
 この段階では手動公開です。mainへのマージ時の自動公開は、正式承認・施行日の運用確認後に別PRで有効にします。PRのCIは公開権限や秘密情報を使用しません。
+
+## 草案をURLで読む
+
+未承認の草案はCloudflare Workers Previewsで共有します。正式版のGitHub Pagesとは別です。
+PRごとのURL、対象コミット、承認との区別、導入設定は [プレビュー運用](docs/pr-previews.md) を参照してください。
