@@ -28,16 +28,22 @@ test('Markdown cannot execute HTML or javascript links', () => {
 
 test('source documents load without implying the three regulations are adopted', () => {
 	const documents = loadRules();
-	assert.equal(documents.length, 4);
+	assert.equal(documents.length, 6);
 	const regulations = documents.filter((document) => document.category === '細則');
 	assert.equal(regulations.length, 3);
+	const proposals = documents.filter((document) => document.category === '新規規則案');
+	assert.equal(proposals.length, 2);
+	assert.ok(proposals.every((document) => document.status === 'proposed'));
+	assert.ok(proposals.every((document) => document.note.includes('未決定')));
 	assert.ok(regulations.every((document) => document.status === 'unconfirmed'));
 	assert.ok(documents.every((document) => /^[a-f0-9]{64}$/.test(document.sha256)));
 	for (const [slug, count] of [
 		['constitution', 20],
 		['travel', 6],
 		['budget', 8],
-		['relationships', 11]
+		['relationships', 11],
+		['project-distribution', 8],
+		['accounting-and-subsidies', 9]
 	]) {
 		const document = documents.find((entry) => entry.slug === slug);
 		for (let number = 1; number <= count; number++) {

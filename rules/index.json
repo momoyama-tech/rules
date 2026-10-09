@@ -54,5 +54,33 @@
     "authority": "幹部会（原文第11条）",
     "sourceTab": "t.5co6i1kplg99",
     "note": "原文は「起草」と記載されています。採択・施行状況は確認中です。"
+  },
+  {
+    "slug": "project-distribution",
+    "file": "regulations/project-distribution.md",
+    "title": "案件収入の管理と分配に関する規則",
+    "shortTitle": "案件収入・分配",
+    "category": "新規規則案",
+    "description": "案件の受託前合意、経費精算、部と参加者への収入配分の案。",
+    "status": "proposed",
+    "date": "2026-10-09",
+    "dateLabel": "改定案作成日",
+    "authority": "部員総会（採択案・委任範囲は未決定）",
+    "sourceTab": "新規案",
+    "note": "未承認・施行日未定の新規規則案です。配分率、宿泊上限、予算、承認主体などは未決定です。採択済み規則として支出・分配の根拠に使用できません。"
+  },
+  {
+    "slug": "accounting-and-subsidies",
+    "file": "regulations/accounting-and-subsidies.md",
+    "title": "会計とイベント参加費・宿泊補助に関する規則",
+    "shortTitle": "会計・参加費・宿泊",
+    "category": "新規規則案",
+    "description": "会計記録、イベント費用の部負担、ハッカソン宿泊補助の案。",
+    "status": "proposed",
+    "date": "2026-10-09",
+    "dateLabel": "改定案作成日",
+    "authority": "部員総会（採択案・委任範囲は未決定）",
+    "sourceTab": "新規案",
+    "note": "未承認・施行日未定の新規規則案です。配分率、宿泊上限、予算、承認主体などは未決定です。採択済み規則として支出・分配の根拠に使用できません。"
   }
 ]
