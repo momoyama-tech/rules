@@ -20,7 +20,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
-          node-version: '24'
+          node-version: "24"
           cache: npm
           cache-dependency-path: site/package-lock.json
       - run: npm ci
@@ -46,7 +46,7 @@ jobs:
           path: assets
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
-          node-version: '24'
+          node-version: "24"
       - name: Install trusted deployment CLI
         run: npm install --prefix deploy-tools wrangler@4.149.0
       - name: Prepare asset-only configuration

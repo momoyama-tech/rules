@@ -18,7 +18,9 @@
 	<aside class="preview-banner" aria-label="草案プレビュー">
 		<strong>未承認の草案プレビュー</strong>
 		<span>正式な現行版ではありません。{data.previewLabel}</span>
-		<a href={`https://github.com/momoyama-tech/rules/commit/${encodeURIComponent(data.sourceRef)}`}>対象コミット {data.sourceRef.slice(0, 7)}</a>
+		<a href={`https://github.com/momoyama-tech/rules/commit/${encodeURIComponent(data.sourceRef)}`}
+			>対象コミット {data.sourceRef.slice(0, 7)}</a
+		>
 	</aside>
 {/if}
 <header class="site-header">
