@@ -59,4 +59,4 @@ jobs:
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
           deploy-tools/node_modules/.bin/wrangler preview --config preview.json --name "pr-${PR_NUMBER}" --json > preview-result.json
-          node -e 'const fs=require("fs");const r=JSON.parse(fs.readFileSync("preview-result.json","utf8"));fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,"### 未承認の草案プレビュー\n\n"+r.preview.urls.map(u=>"- "+u).join("\n")+"\n")'
+          node -e 'const fs=require("fs");const s=fs.readFileSync("preview-result.json","utf8");const r=JSON.parse(s.slice(s.lastIndexOf("\n{")+1));if(!r.preview.urls.length)throw new Error("Preview URL missing");fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,"### 未承認の草案プレビュー\n\n"+r.preview.urls.map(u=>"- "+u).join("\n")+"\n")'
