@@ -1,0 +1,12 @@
+{
+  "name": "momoyama-tech-rules",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix site run dev",
+    "check": "npm --prefix site run check",
+    "test": "npm --prefix site test",
+    "build": "npm --prefix site run build",
+    "preview": "npm --prefix site run preview",
+    "rules:hash": "node scripts/hash-rules.mjs"
+  }
+}

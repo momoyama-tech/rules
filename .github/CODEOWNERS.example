@@ -1,0 +1,8 @@
+# 候補チーム名。実在・権限・担当を確認してCODEOWNERSへ改名する。
+# このexampleファイルはレビュー制御に使われない。
+* @momoyama-tech/rules-maintainers
+/rules/ @momoyama-tech/rules-verifiers @momoyama-tech/rules-maintainers
+/decisions/ @momoyama-tech/rules-verifiers @momoyama-tech/rules-maintainers
+/.github/ @momoyama-tech/rules-maintainers
+/scripts/ @momoyama-tech/rules-maintainers
+# 両チーム必須の条件はRulesetsで別途設定する。
