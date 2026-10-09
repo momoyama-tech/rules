@@ -51,7 +51,7 @@ jobs:
         run: npm install --prefix deploy-tools wrangler@4.149.0
       - name: Prepare asset-only configuration
         run: |
-          node -e 'require("fs").writeFileSync("preview.json",JSON.stringify({name:"momoyama-tech-rules-preview",compatibility_date:"2026-10-09",workers_dev:false,assets:{directory:"./assets",not_found_handling:"404-page",html_handling:"auto-trailing-slash"},previews:{}}))'
+          node -e 'require("fs").writeFileSync("preview.json",JSON.stringify({name:"momoyama-tech-rules-preview",compatibility_date:"2026-10-09",workers_dev:false,preview_urls:true,assets:{directory:"./assets",not_found_handling:"404-page",html_handling:"auto-trailing-slash"},previews:{}}))'
       - name: Upload draft preview
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
