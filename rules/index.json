@@ -1,0 +1,58 @@
+[
+  {
+    "slug": "constitution",
+    "file": "constitution.md",
+    "title": "桃山学院大学テック部活動会則",
+    "shortTitle": "会則",
+    "category": "会則",
+    "description": "テック部の目的、組織、活動と意思決定の基本を定めます。",
+    "status": "source-current",
+    "date": "2023-10-01",
+    "dateLabel": "原文の施行日",
+    "authority": "部員総会（第15条の議決条件は要確認）",
+    "sourceTab": "t.0",
+    "note": "現在使用しているGoogle Docからの移行版です。第15条の投票条件と第11条の権限関係は確認中です。"
+  },
+  {
+    "slug": "travel",
+    "file": "regulations/travel.md",
+    "title": "交通費に関する規則",
+    "shortTitle": "交通費",
+    "category": "細則",
+    "description": "活動に伴う交通費の申請、支給範囲と条件について。",
+    "status": "unconfirmed",
+    "date": "2024-12-08",
+    "dateLabel": "起草日",
+    "authority": "幹部会（原文第6条）",
+    "sourceTab": "t.y8pavc91232e",
+    "note": "原文は「起草」と記載されています。採択・施行状況は確認中です。"
+  },
+  {
+    "slug": "budget",
+    "file": "regulations/budget.md",
+    "title": "予算に関する規則",
+    "shortTitle": "予算",
+    "category": "細則",
+    "description": "年間予算の決定、予備費と繰り越しについて。",
+    "status": "unconfirmed",
+    "date": "2024-12-09",
+    "dateLabel": "起草日",
+    "authority": "幹部会（原文第8条）",
+    "sourceTab": "t.54ee8nwdoupq",
+    "note": "原文は「起草」と記載されています。採択・施行状況は確認中です。"
+  },
+  {
+    "slug": "relationships",
+    "file": "regulations/relationships.md",
+    "title": "関係に関する規則",
+    "shortTitle": "関係",
+    "category": "細則",
+    "description": "部内のコミュニケーションと相談・対応の仕組みについて。",
+    "status": "unconfirmed",
+    "date": "2025-05-29",
+    "dateLabel": "起草日",
+    "authority": "幹部会（原文第11条）",
+    "sourceTab": "t.5co6i1kplg99",
+    "note": "原文は「起草」と記載されています。採択・施行状況は確認中です。"
+  }
+]
