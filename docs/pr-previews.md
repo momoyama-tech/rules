@@ -20,7 +20,7 @@ CLOUDFLARE_ACCOUNT_ID='<対象アカウントID>' npm run deploy:preview -- --na
 画面には未承認表示と対象コミットを出し、検索エンジンへの登録を抑制する。
 検索抑制はアクセス制限ではなく、URLを知る人は閲覧できる。
 
-GitHub Pagesは通常の `npm run build` と `BASE_PATH=/rules` を使用する。
+GitHub Pagesは通常の `npm run build` を使用し、`https://rules.momotech.club/` の直下に公開する。
 プレビューの `build:preview` はルートパスで出力し、Pagesの公開操作を行わない。
 
 ## PR更新に合わせた自動公開

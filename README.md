@@ -23,7 +23,7 @@ scripts/                本文ハッシュの取得
 
 本文の編集先は `rules/` です。`site/` に本文を複製せず、ビルド時に同じMarkdownから静的ページを生成します。文書の追加時はMarkdownを置き、`rules/index.json` に一覧情報を追加してください。ブラウザーのファイル編集からもPRを作れます。
 
-公開URL候補: <https://momoyama-tech.github.io/rules/>。Pagesは別途有効化するまで公開されません。
+公開URL: <https://rules.momotech.club/>（GitHub Pages、独自ドメイン）。DNSはNetlify DNSで `rules` のCNAMEを `momoyama-tech.github.io` に向けています。
 
 ## 現行文書と移行
 
@@ -117,9 +117,8 @@ npm run preview
 成果物は `site/build/`。Pagesと同じサブパスで検証する場合:
 
 ```sh
-BASE_PATH=/rules npm run build
-BASE_PATH=/rules npm run preview
-# 表示されたローカルURLの /rules/ を開く
+npm run build
+npm run preview
 ```
 
 ## GitHub Pagesへの導入

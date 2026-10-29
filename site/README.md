@@ -7,10 +7,10 @@ npm ci
 npm run dev
 npm run check
 npm test
-BASE_PATH=/rules npm run build
-BASE_PATH=/rules npm run preview
+npm run build
+npm run preview
 ```
 
-`BASE_PATH` はGitHub Pagesのサブパスです。`SOURCE_REF` を設定すると原文・履歴リンクがそのコミット／ブランチを参照します（既定値 `main`）。CIと公開ビルドでは対象コミットを指定します。
+`BASE_PATH` は配信先のサブパスです。公開版は独自ドメイン直下のため空にします。`SOURCE_REF` を設定すると原文・履歴リンクがそのコミット／ブランチを参照します（既定値 `main`）。CIと公開ビルドでは対象コミットを指定します。
 
 `npm run format` でコードを整形できます。`build/` は生成物なので編集・commitしません。
