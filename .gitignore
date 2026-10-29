@@ -6,3 +6,6 @@ build/
 .env.*
 !.env.example
 artifacts/
+
+# Local Cloudflare state
+.wrangler/

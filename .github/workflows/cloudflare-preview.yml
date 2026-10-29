@@ -1,0 +1,62 @@
+name: Cloudflare draft preview
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+permissions:
+  contents: read
+concurrency:
+  group: cloudflare-preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  build:
+    if: vars.CLOUDFLARE_PREVIEWS_ENABLED == 'true' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: site
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+      - run: npm ci
+      - run: npm run check
+      - run: npm test
+      - run: npm run build:preview
+        env:
+          SOURCE_REF: ${{ github.event.pull_request.head.sha }}
+          PREVIEW_LABEL: PR #${{ github.event.pull_request.number }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: preview-assets
+          path: site/build
+          retention-days: 7
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: cloudflare-preview
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: preview-assets
+          path: assets
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: "24"
+      - name: Install trusted deployment CLI
+        run: npm install --prefix deploy-tools wrangler@4.149.0
+      - name: Prepare asset-only configuration
+        run: |
+          node -e 'require("fs").writeFileSync("preview.json",JSON.stringify({name:"momoyama-tech-rules-preview",compatibility_date:"2026-10-09",workers_dev:true,preview_urls:true,assets:{directory:"./assets",not_found_handling:"404-page",html_handling:"auto-trailing-slash"},previews:{}}))'
+      - name: Upload draft preview
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          deploy-tools/node_modules/.bin/wrangler preview --config preview.json --name "pr-${PR_NUMBER}" --json > preview-result.json
+          node -e 'const fs=require("fs");const s=fs.readFileSync("preview-result.json","utf8");const r=JSON.parse(s.slice(s.lastIndexOf("\n{")+1));if(!r.preview.urls.length)throw new Error("Preview URL missing");fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,"### 未承認の草案プレビュー\n\n"+r.preview.urls.map(u=>"- "+u).join("\n")+"\n")'
