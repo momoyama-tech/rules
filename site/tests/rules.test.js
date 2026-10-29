@@ -30,26 +30,31 @@ test('Markdown cannot execute HTML or javascript links', () => {
 	assert.match(html, /href="https:\/\/example.com"/);
 });
 
-test('source documents load without implying the three regulations are adopted', () => {
+test('the vote covers the constitution and all eight regulations without adopting them', () => {
 	const documents = loadRules();
-	assert.equal(documents.length, 6);
-	const regulations = documents.filter((document) => document.category === '細則');
-	assert.equal(regulations.length, 3);
-	const proposals = documents.filter((document) => document.category === '新規規則案');
-	assert.equal(proposals.length, 2);
-	assert.ok(proposals.every((document) => document.status === 'proposed'));
-	assert.ok(proposals.every((document) => document.note.includes('未決定')));
-	assert.ok(regulations.every((document) => document.status === 'unconfirmed'));
+	assert.equal(documents.length, 9);
+	assert.ok(documents.every((document) => document.status === 'proposed' && document.agenda));
+	assert.ok(documents.every((document) => document.proposal === '2026-10-30-bylaws-vote.md'));
+	const unchanged = ['constitution', 'travel', 'budget', 'relationships'];
+	for (const slug of unchanged)
+		assert.equal(
+			documents.find((document) => document.slug === slug)?.baseCommit,
+			'b031c597b362c146eac467c8f15de9cc4fb1561f'
+		);
 	assert.ok(documents.every((document) => /^[a-f0-9]{64}$/.test(document.sha256)));
 	for (const [slug, count] of [
 		['constitution', 20],
 		['travel', 6],
 		['budget', 8],
 		['relationships', 11],
+		['executive-board', 9],
+		['discipline', 15],
+		['reporting', 10],
 		['project-distribution', 8],
 		['accounting-and-subsidies', 9]
 	]) {
 		const document = documents.find((entry) => entry.slug === slug);
+		assert.ok(document, `${slug}: missing document`);
 		for (let number = 1; number <= count; number++) {
 			assert.ok(
 				document.headings.some((heading) => heading.id === `article-${number}`),

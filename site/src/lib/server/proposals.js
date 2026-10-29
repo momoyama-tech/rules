@@ -44,6 +44,7 @@ function proposedDocument(rule) {
 		? versions.find((version) => version.sha === rule.baseCommit)
 		: undefined;
 	const diff = base ? withContext(diffMarkdown(base.markdown, rule.markdown)) : [];
+	const changed = diff.some((line) => line.type === 'add' || line.type === 'del');
 	return {
 		slug: rule.slug,
 		title: rule.title,
@@ -52,7 +53,7 @@ function proposedDocument(rule) {
 		note: rule.note,
 		authority: rule.authority,
 		agenda: rule.agenda === true,
-		kind: rule.baseCommit ? '改定' : '新規',
+		kind: !rule.baseCommit ? '新規' : base && !changed ? '現行どおり' : '改定',
 		sha256: rule.sha256,
 		// The text under review matches its latest commit unless it was edited
 		// after that commit; then there is no commit to cite yet.
@@ -64,6 +65,6 @@ function proposedDocument(rule) {
 		baseMissing: Boolean(rule.baseCommit && !base),
 		added: diff.filter((line) => line.type === 'add').length,
 		removed: diff.filter((line) => line.type === 'del').length,
-		diff
+		diff: changed ? diff : []
 	};
 }

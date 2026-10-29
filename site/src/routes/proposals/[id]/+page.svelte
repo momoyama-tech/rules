@@ -60,7 +60,12 @@
 						)}）{:else}コミット前の変更を含みます{/if}・本文SHA-256
 					<code class="hash">{document.sha256}</code>
 				</p>
-				{#if document.base}
+				{#if document.base && document.diff.length === 0}
+					<p class="history-empty">
+						比較元（{document.base
+							.shortSha}）から本文の変更はありません。現行の本文をそのまま議決にかけます。
+					</p>
+				{:else if document.base}
 					<h3>比較元（{document.base.shortSha}）からの変更</h3>
 					<DiffBlock diff={document.diff} />
 				{:else if document.baseMissing}

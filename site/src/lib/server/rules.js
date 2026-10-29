@@ -51,7 +51,8 @@ export function renderRule(markdown) {
 			...sanitizeHtml.defaults.allowedAttributes,
 			h2: ['id'],
 			h3: ['id'],
-			h4: ['id']
+			h4: ['id'],
+			ol: ['start']
 		},
 		allowedSchemes: ['https', 'http', 'mailto'],
 		allowProtocolRelative: false
