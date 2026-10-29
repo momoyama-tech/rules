@@ -36,6 +36,9 @@
 - [ ] github-pages environmentはSelected branchesでmainのみ許可
 - [ ] 必要なら公開担当のenvironment承認を要求し管理者バイパスを禁止
 - [ ] `PAGES_ENABLED=true` を設定
+- [ ] Organization設定のPagesで `rules.momotech.club` を検証済みドメインに追加（Netlify DNSにTXTレコード `_github-pages-challenge-momoyama-tech.rules`）
+- [ ] Netlify DNSに `rules` → `momoyama-tech.github.io` のCNAMEを追加
+- [ ] Pagesのカスタムドメインを `rules.momotech.club` にし、証明書発行後にEnforce HTTPSを有効化
 - [ ] mainからDeploy Pagesを手動実行
 - [ ] 公開先で全ページ・条文リンク・モバイル・印刷・404を確認
 - [ ] 公開コミット、日時、URL、検証結果を記録

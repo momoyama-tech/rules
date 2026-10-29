@@ -15,7 +15,7 @@ Notionは読み取り専用。Codeルーチンから仕様、タスク、Schedul
 
 - 対象リポジトリだけをcheckoutし、AGENTS.md・CLAUDE.md・README・仕様・既存PR・CIを読む。重複PRを避ける。
 - 承認範囲内でrules/・site/等を編集する。commit・push・Draft PRもその範囲に含まれるときだけ行う。
-- `npm run check`、`npm test`、`BASE_PATH=/rules npm run build` と関連UIを検証する。
+- `npm run check`、`npm test`、`npm run build` と関連UIを検証する。
 - 正式決議、本文ハッシュ、レビュー、施行日を区別し、未承認案はproposedと表示する。
 - mainへの直接push、マージ、Pages公開、権限・保護ルール変更、外部送信、契約・支払・報酬分配は別の具体的承認を要する。
 - 実行結果には対象タスク・仕様・承認照合、PR・commit・CI、検証結果、未確認と判断事項を含める。

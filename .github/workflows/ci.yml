@@ -26,5 +26,5 @@ jobs:
       - run: npm test
       - run: npm run build
         env:
-          BASE_PATH: /rules
+          BASE_PATH: ""
           SOURCE_REF: ${{ github.event.pull_request.head.sha || github.sha }}
