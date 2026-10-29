@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -215,5 +216,105 @@ test('proposed documents are grouped by their proposal and marked for the vote',
 		assert.throws(() => loadProposals(rules, proposals), /改定案ファイルがありません/);
 	} finally {
 		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test('adopted documents must match a verified passing decision for the voted text', () => {
+	const repo = mkdtempSync(join(tmpdir(), 'rules-adopted-'));
+	const run = (/** @type {string[]} */ ...args) =>
+		execFileSync('git', ['-C', repo, ...args], { encoding: 'utf8' }).trim();
+	try {
+		run('init', '-q');
+		run('config', 'user.email', 'test@example.com');
+		run('config', 'user.name', 'test');
+		const rules = join(repo, 'rules');
+		const decisions = join(repo, 'decisions');
+		mkdirSync(rules);
+		mkdirSync(decisions);
+		const text = '# 案\n\n## 第1条\n\n本文\n';
+		writeFileSync(join(rules, 'a.md'), text);
+		run('add', '.');
+		run('commit', '-q', '-m', 'vote target');
+		const commit = run('rev-parse', 'HEAD');
+		const sha256 = createHash('sha256').update(text).digest('hex');
+		const metadata = {
+			slug: 'a',
+			file: 'a.md',
+			title: '案',
+			shortTitle: '案',
+			category: '細則',
+			description: '案',
+			status: 'adopted',
+			date: '2026-01-05',
+			dateLabel: '施行日',
+			authority: '部員総会',
+			sourceTab: '新規案',
+			note: '採択済み',
+			decision: '2026-01-05-a'
+		};
+		const decision = {
+			id: '2026-01-05-a',
+			date: '2026-01-05',
+			body: '部員総会',
+			clause: '会則第15条',
+			quorum: { members: 20, present: 12, met: true },
+			votes: { for: 8, against: 2, abstain: 2, invalid: 0 },
+			rule: '有効投票の5分の3以上',
+			result: '可決',
+			effectiveDate: '2026-01-05',
+			pullRequest: 7,
+			documents: [{ file: 'a.md', commit, sha256 }],
+			minutesVerified: true,
+			summary: '規則案を採択'
+		};
+		const write = (/** @type {object} */ entry, /** @type {object} */ record) => {
+			writeFileSync(join(rules, 'index.json'), JSON.stringify([entry]));
+			writeFileSync(join(decisions, '2026-01-05-a.json'), JSON.stringify(record));
+		};
+
+		write(metadata, decision);
+		const [document] = loadRules(rules);
+		assert.equal(document.statusLabel, '採択済み');
+		assert.equal(document.decisionRecord?.commit, commit);
+		// Templates are not read as decisions.
+		writeFileSync(join(decisions, '_template.json'), '{}');
+		assert.doesNotThrow(() => loadRules(rules));
+
+		write(metadata, { ...decision, effectiveDate: '2999-01-01' });
+		assert.equal(loadRules(rules)[0].statusLabel, '採択済み・施行前');
+
+		write(metadata, { ...decision, documents: [{ file: 'a.md', commit, sha256: '0'.repeat(64) }] });
+		assert.throws(() => loadRules(rules), /SHA-256が一致しません/);
+
+		write(metadata, { ...decision, result: '否決' });
+		assert.throws(() => loadRules(rules), /可決されていません/);
+
+		write(metadata, { ...decision, date: '2999-01-01', effectiveDate: '2999-01-01' });
+		assert.throws(() => loadRules(rules), /未来/);
+
+		write(metadata, { ...decision, minutesVerified: false });
+		assert.throws(() => loadRules(rules), /照合が済んでいません/);
+
+		write(metadata, {
+			...decision,
+			quorum: { members: 20, present: 8, met: false },
+			votes: { for: 6, against: 2, abstain: 0, invalid: 0 }
+		});
+		assert.throws(() => loadRules(rules), /定足数が不成立/);
+
+		write(metadata, { ...decision, votes: { for: 10, against: 3, abstain: 0, invalid: 0 } });
+		assert.throws(() => loadRules(rules), /出席者数を超えて/);
+
+		write({ ...metadata, decision: 'missing' }, decision);
+		assert.throws(() => loadRules(rules), /決議記録がありません/);
+
+		write({ ...metadata, status: 'proposed' }, decision);
+		assert.throws(() => loadRules(rules), /採択済み以外に決議ID/);
+
+		write(metadata, decision);
+		writeFileSync(join(rules, 'a.md'), '# 案\n\n## 第1条\n\n変更後の本文\n');
+		assert.throws(() => loadRules(rules), /再審議/);
+	} finally {
+		rmSync(repo, { recursive: true, force: true });
 	}
 });

@@ -1,0 +1,21 @@
+{
+  "id": "YYYY-MM-DD-議題を英小文字で",
+  "date": "YYYY-MM-DD",
+  "body": "部員総会",
+  "clause": "会則第15条",
+  "quorum": { "members": 0, "present": 0, "met": true },
+  "votes": { "for": 0, "against": 0, "abstain": 0, "invalid": 0 },
+  "rule": "可決の判定方法（分母・必要な割合）",
+  "result": "可決",
+  "effectiveDate": "YYYY-MM-DD",
+  "pullRequest": 0,
+  "documents": [
+    {
+      "file": "regulations/accounting-and-subsidies.md",
+      "commit": "投票対象コミットの40桁SHA",
+      "sha256": "npm run rules:hash で出した本文SHA-256"
+    }
+  ],
+  "minutesVerified": false,
+  "summary": "決議の概要（個人名を含めない）"
+}

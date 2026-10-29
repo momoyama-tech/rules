@@ -3,13 +3,15 @@ import { resolve, sep } from 'node:path';
 import { createHash } from 'node:crypto';
 import MarkdownIt from 'markdown-it';
 import sanitizeHtml from 'sanitize-html';
+import { adoptionProblem, loadDecisions } from './decisions.js';
 
-/** @typedef {{slug:string,file:string,title:string,shortTitle:string,category:string,description:string,status:'source-current'|'unconfirmed'|'proposed',date:string,dateLabel:string,authority:string,sourceTab:string,note:string,proposal?:string,baseCommit?:string,agenda?:boolean}} RuleMetadata */
+/** @typedef {{slug:string,file:string,title:string,shortTitle:string,category:string,description:string,status:'source-current'|'unconfirmed'|'proposed'|'adopted',date:string,dateLabel:string,authority:string,sourceTab:string,note:string,proposal?:string,baseCommit?:string,agenda?:boolean,decision?:string}} RuleMetadata */
 
 export const statusLabels = {
 	'source-current': '原本移行版',
 	unconfirmed: '採択状況を確認中',
-	proposed: '改定案・未承認'
+	proposed: '改定案・未承認',
+	adopted: '採択済み'
 };
 
 /** @param {string} markdown */
@@ -61,8 +63,16 @@ export function renderRule(markdown) {
 	return { html, headings, text };
 }
 
-/** @param {string} [root] */
-export function loadRules(root = resolve(process.cwd(), '../rules')) {
+/**
+ * @param {string} [root]
+ * @param {string} [decisionsRoot]
+ */
+export function loadRules(
+	root = resolve(process.cwd(), '../rules'),
+	decisionsRoot = resolve(root, '../decisions')
+) {
+	const decisions = loadDecisions(decisionsRoot, resolve(root, '..'));
+	const today = new Date().toISOString().slice(0, 10);
 	/** @type {RuleMetadata[]} */
 	const entries = JSON.parse(readFileSync(resolve(root, 'index.json'), 'utf8'));
 	if (!Array.isArray(entries) || entries.length === 0) throw new Error('文書一覧が空です');
@@ -104,18 +114,44 @@ export function loadRules(root = resolve(process.cwd(), '../rules')) {
 			throw new Error(`議決対象の指定が不正です: ${entry.slug}`);
 		if (entry.status !== 'proposed' && (entry.proposal || entry.agenda))
 			throw new Error(`改定案以外に議決情報があります: ${entry.slug}`);
+		if (entry.decision !== undefined && entry.status !== 'adopted')
+			throw new Error(`採択済み以外に決議IDがあります: ${entry.slug}`);
 		const filePath = resolve(root, entry.file);
 		if (!filePath.startsWith(resolve(root) + sep))
 			throw new Error('本文はrules内に配置してください');
 		const markdown = readFileSync(filePath, 'utf8');
 		if (!markdown.startsWith(`# ${entry.title}\n`))
 			throw new Error(`本文と一覧のタイトルが不一致: ${entry.slug}`);
+		const sha256 = createHash('sha256').update(markdown).digest('hex');
+		const decision = entry.decision ? decisions.get(entry.decision) : undefined;
+		if (entry.status === 'adopted') {
+			const problem = adoptionProblem(decision, entry.file, sha256);
+			if (problem) throw new Error(`採択済みと表示できません（${entry.slug}）: ${problem}`);
+		}
 		return {
 			...entry,
 			...renderRule(markdown),
 			markdown,
-			statusLabel: statusLabels[entry.status],
-			sha256: createHash('sha256').update(markdown).digest('hex'),
+			statusLabel:
+				decision && decision.effectiveDate > today
+					? '採択済み・施行前'
+					: statusLabels[entry.status],
+			sha256,
+			decisionRecord: decision
+				? {
+						id: decision.id,
+						date: decision.date,
+						body: decision.body,
+						clause: decision.clause,
+						result: decision.result,
+						effectiveDate: decision.effectiveDate,
+						inEffect: decision.effectiveDate <= today,
+						votes: decision.votes,
+						quorum: decision.quorum,
+						pullRequest: decision.pullRequest,
+						commit: decision.documents.find((document) => document.file === entry.file)?.commit
+					}
+				: null,
 			readingMinutes: Math.max(1, Math.ceil(markdown.length / 600))
 		};
 	});

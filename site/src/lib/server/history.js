@@ -1,26 +1,12 @@
-import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { resolve } from 'node:path';
+import { defaultRepo, git } from './git.js';
 import { renderRule } from './rules.js';
 
 /** @typedef {{sha:string,shortSha:string,date:string,subject:string,path:string,markdown:string,sha256:string}} RuleVersion */
 /** @typedef {{type:'same'|'add'|'del',text:string,parts?:{type:'same'|'add'|'del',text:string}[]}} DiffLine */
 
-const defaultRepo = resolve(process.cwd(), '..');
 /** @type {Map<string, RuleVersion[]>} */
 const cache = new Map();
-
-/**
- * @param {string} repo
- * @param {string[]} args
- */
-function git(repo, args) {
-	return execFileSync('git', ['-C', repo, ...args], {
-		encoding: 'utf8',
-		maxBuffer: 64 * 1024 * 1024,
-		stdio: ['ignore', 'pipe', 'ignore']
-	});
-}
 
 /**
  * Committed versions of one rule file, newest first. Builds without git

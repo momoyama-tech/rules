@@ -74,7 +74,8 @@
 						><span
 							class="status-badge"
 							class:status-pending={document.status === 'unconfirmed'}
-							class:status-proposed={document.status === 'proposed'}>{document.statusLabel}</span
+							class:status-proposed={document.status === 'proposed'}
+							class:status-adopted={document.status === 'adopted'}>{document.statusLabel}</span
 						>
 					</div>
 					<h3>{document.slug === 'constitution' ? 'テック部活動会則' : document.title}</h3>

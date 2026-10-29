@@ -357,6 +357,10 @@ button {
 	background: #f4e7de;
 	color: #984e2d;
 }
+.status-adopted {
+	background: #344c40;
+	color: #f5f4ef;
+}
 .document-card h3 {
 	font-family: var(--serif);
 	font-size: 23px;
@@ -1357,4 +1361,46 @@ code.hash {
 	.proposals-main > h1 {
 		font-size: 28px;
 	}
+}
+
+/* Decisions */
+.adopted-notice {
+	border-color: #344c40;
+	background: #e6ece3;
+}
+.adopted-notice p + p {
+	margin-top: 8px;
+}
+.decision-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: grid;
+	gap: 14px;
+}
+.decision-card {
+	border: 1px solid var(--line);
+	background: #fbfaf6;
+	border-radius: 4px;
+	padding: 18px 22px;
+	display: grid;
+	gap: 10px;
+	min-width: 0;
+}
+.decision-card h2 {
+	font-family: var(--serif);
+	font-weight: 500;
+	font-size: 18px;
+	margin: 0;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	align-items: center;
+}
+.decision-card ul {
+	margin: 0;
+	padding-left: 1.2em;
+	font-size: 12px;
+	line-height: 1.9;
+	overflow-wrap: anywhere;
 }

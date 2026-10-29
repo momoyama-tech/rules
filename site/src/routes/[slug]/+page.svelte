@@ -38,7 +38,8 @@
 			<span
 				class="status-badge"
 				class:status-pending={document.status === 'unconfirmed'}
-				class:status-proposed={document.status === 'proposed'}>{document.statusLabel}</span
+				class:status-proposed={document.status === 'proposed'}
+				class:status-adopted={document.status === 'adopted'}>{document.statusLabel}</span
 			><span
 				>{document.dateLabel}
 				<time datetime={document.date}>{document.date.replaceAll('-', '.')}</time></span
@@ -54,6 +55,33 @@
 			>
 			<p>{document.note}</p>
 		</div>
+		{#if document.decisionRecord}
+			{@const record = document.decisionRecord}
+			<div class="document-notice adopted-notice">
+				<strong
+					>{record.date.replaceAll('-', '.')}の{record.body}で{record.result}{record.inEffect
+						? ''
+						: '（施行前）'}</strong
+				>
+				<p>
+					{record.clause}に基づく決議（決議ID {record.id}）。施行日 {record.effectiveDate.replaceAll(
+						'-',
+						'.'
+					)}。出席 {record.quorum.present}/{record.quorum.members}名、賛成 {record.votes.for}・反対 {record
+						.votes.against}・棄権 {record.votes.abstain}・無効 {record.votes.invalid}。投票対象の版
+					<code>{record.commit?.slice(0, 7)}</code> と現在の本文のSHA-256が一致しています。
+				</p>
+				<p>
+					<a class="history-link" href={resolve('/decisions')}>決議記録の一覧</a>
+					・
+					<a
+						class="history-link"
+						href={`https://github.com/momoyama-tech/rules/pull/${record.pullRequest}`}
+						>対象PR #{record.pullRequest}</a
+					>
+				</p>
+			</div>
+		{/if}
 		<details class="mobile-toc">
 			<summary>この文書の目次</summary>
 			<nav aria-label="この文書の目次（モバイル）">
