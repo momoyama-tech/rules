@@ -31,7 +31,10 @@
 		>
 	</a>
 	<nav class="header-nav" aria-label="メインナビゲーション">
-		<a class:active={!page.params.slug} href={resolve('/')}>会則・規則</a>
+		<a class:active={!page.route.id?.startsWith('/proposals')} href={resolve('/')}>会則・規則</a>
+		<a class:active={page.route.id?.startsWith('/proposals')} href={resolve('/proposals')}
+			>審議中の案</a
+		>
 		<a href="https://github.com/momoyama-tech/rules/pulls"
 			>変更の提案 <span aria-hidden="true">↗</span></a
 		>
@@ -49,6 +52,7 @@
 </header>
 <nav id="mobile-nav" class="mobile-nav" hidden={!menuOpen} aria-label="モバイル文書ナビゲーション">
 	<a href={resolve('/')} onclick={() => (menuOpen = false)}>会則・規則の一覧</a>
+	<a href={resolve('/proposals')} onclick={() => (menuOpen = false)}>審議中の案</a>
 	{#each data.documents as document}
 		<a href={resolve('/[slug]', { slug: document.slug })} onclick={() => (menuOpen = false)}
 			>{document.title}</a

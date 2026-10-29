@@ -6,6 +6,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { renderRule, loadRules } from '../src/lib/server/rules.js';
 import { diffMarkdown, withContext, loadHistory } from '../src/lib/server/history.js';
+import { loadProposals } from '../src/lib/server/proposals.js';
 
 test('Japanese article anchors stay stable and repeated paragraph numbers are distinct', () => {
 	const result = renderRule(
@@ -159,5 +160,60 @@ test('history lists committed versions of a file newest first', () => {
 		assert.deepEqual(loadHistory('missing.md', repo), []);
 	} finally {
 		rmSync(repo, { recursive: true, force: true });
+	}
+});
+
+test('proposed documents are grouped by their proposal and marked for the vote', () => {
+	const root = mkdtempSync(join(tmpdir(), 'rules-proposals-'));
+	try {
+		const rules = join(root, 'rules');
+		const proposals = join(root, 'proposals');
+		mkdirSync(rules);
+		mkdirSync(proposals);
+		const metadata = {
+			file: 'a.md',
+			title: '案',
+			shortTitle: '案',
+			category: '新規規則案',
+			description: '案',
+			status: 'proposed',
+			date: '2026-10-09',
+			dateLabel: '起草日',
+			authority: '部員総会',
+			sourceTab: '新規案',
+			note: '未承認'
+		};
+		writeFileSync(join(rules, 'a.md'), '# 案\n\n## 第1条\n\n本文\n');
+		writeFileSync(join(proposals, 'p.md'), '# 提案\n\n理由\n');
+		writeFileSync(
+			join(rules, 'index.json'),
+			JSON.stringify([
+				{ ...metadata, slug: 'a', proposal: 'p.md', agenda: true },
+				{ ...metadata, slug: 'b', proposal: 'p.md' }
+			])
+		);
+		const [proposal] = loadProposals(rules, proposals);
+		assert.equal(proposal.id, 'p');
+		assert.equal(proposal.title, '提案');
+		assert.ok(proposal.agenda);
+		assert.deepEqual(
+			proposal.documents.map((document) => [document.slug, document.agenda, document.kind]),
+			[
+				['a', true, '新規'],
+				['b', false, '新規']
+			]
+		);
+		writeFileSync(
+			join(rules, 'index.json'),
+			JSON.stringify([{ ...metadata, slug: 'a', status: 'unconfirmed', agenda: true }])
+		);
+		assert.throws(() => loadRules(rules), /改定案以外/);
+		writeFileSync(
+			join(rules, 'index.json'),
+			JSON.stringify([{ ...metadata, slug: 'a', proposal: 'missing.md' }])
+		);
+		assert.throws(() => loadProposals(rules, proposals), /改定案ファイルがありません/);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
 	}
 });

@@ -9,5 +9,6 @@ export function entries() {
 export function load({ params }) {
 	const document = loadRules().find((rule) => rule.slug === params.slug);
 	if (!document) error(404, '文書が見つかりません');
-	return { document };
+	const { markdown, ...rest } = document;
+	return { document: rest };
 }

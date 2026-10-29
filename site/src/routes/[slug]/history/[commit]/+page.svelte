@@ -1,5 +1,6 @@
 <script>
 	import { resolve } from '$app/paths';
+	import DiffBlock from '#lib/DiffBlock.svelte';
 	let { data } = $props();
 	let document = $derived(data.document);
 	let version = $derived(data.version);
@@ -69,29 +70,7 @@
 			{:else if version.diff.every((line) => line.type === 'gap')}
 				<p class="history-empty">本文の変更はありません（空行や書式のみの変更）。</p>
 			{:else}
-				<div class="diff-block">
-					{#each version.diff as line}
-						{#if line.type === 'gap'}
-							<div class="diff-gap">… 変更のない {line.count} 行 …</div>
-						{:else}
-							<div class="diff-line diff-{line.type}">
-								<span
-									class="diff-mark"
-									aria-label={line.type === 'add'
-										? '追加'
-										: line.type === 'del'
-											? '削除'
-											: '変更なし'}
-									>{line.type === 'add' ? '+' : line.type === 'del' ? '−' : ' '}</span
-								><span class="diff-text"
-									>{#if line.parts}{#each line.parts as part}{#if part.type === 'same'}{part.text}{:else if part.type === 'add'}<ins
-													>{part.text}</ins
-												>{:else}<del>{part.text}</del>{/if}{/each}{:else}{line.text}{/if}</span
-								>
-							</div>
-						{/if}
-					{/each}
-				</div>
+				<DiffBlock diff={version.diff} />
 			{/if}
 		</section>
 

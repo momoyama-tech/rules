@@ -10,6 +10,6 @@ export function entries() {
 export function load({ params }) {
 	const document = loadRules().find((rule) => rule.slug === params.slug);
 	if (!document) error(404, '文書が見つかりません');
-	const { html, ...summary } = document;
+	const { html, markdown, ...summary } = document;
 	return { document: summary, versions: historySummaries(document.file) };
 }

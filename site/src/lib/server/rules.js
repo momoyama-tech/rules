@@ -4,7 +4,7 @@ import { createHash } from 'node:crypto';
 import MarkdownIt from 'markdown-it';
 import sanitizeHtml from 'sanitize-html';
 
-/** @typedef {{slug:string,file:string,title:string,shortTitle:string,category:string,description:string,status:'source-current'|'unconfirmed'|'proposed',date:string,dateLabel:string,authority:string,sourceTab:string,note:string}} RuleMetadata */
+/** @typedef {{slug:string,file:string,title:string,shortTitle:string,category:string,description:string,status:'source-current'|'unconfirmed'|'proposed',date:string,dateLabel:string,authority:string,sourceTab:string,note:string,proposal?:string,baseCommit?:string,agenda?:boolean}} RuleMetadata */
 
 export const statusLabels = {
 	'source-current': '原本移行版',
@@ -96,6 +96,14 @@ export function loadRules(root = resolve(process.cwd(), '../rules')) {
 			throw new Error('文書の日付が不正です');
 		if (typeof entry.file !== 'string' || !/^[a-z0-9/-]+\.md$/.test(entry.file))
 			throw new Error('本文パスが不正です');
+		if (entry.proposal !== undefined && !/^[0-9a-z-]+\.md$/.test(entry.proposal))
+			throw new Error(`改定案ファイル名が不正です: ${entry.slug}`);
+		if (entry.baseCommit !== undefined && !/^[0-9a-f]{40}$/.test(entry.baseCommit))
+			throw new Error(`比較元コミットは40桁のSHAで指定してください: ${entry.slug}`);
+		if (entry.agenda !== undefined && typeof entry.agenda !== 'boolean')
+			throw new Error(`議決対象の指定が不正です: ${entry.slug}`);
+		if (entry.status !== 'proposed' && (entry.proposal || entry.agenda))
+			throw new Error(`改定案以外に議決情報があります: ${entry.slug}`);
 		const filePath = resolve(root, entry.file);
 		if (!filePath.startsWith(resolve(root) + sep))
 			throw new Error('本文はrules内に配置してください');
@@ -105,6 +113,7 @@ export function loadRules(root = resolve(process.cwd(), '../rules')) {
 		return {
 			...entry,
 			...renderRule(markdown),
+			markdown,
 			statusLabel: statusLabels[entry.status],
 			sha256: createHash('sha256').update(markdown).digest('hex'),
 			readingMinutes: Math.max(1, Math.ceil(markdown.length / 600))
@@ -113,5 +122,5 @@ export function loadRules(root = resolve(process.cwd(), '../rules')) {
 }
 
 export function summaries() {
-	return loadRules().map(({ html, sha256, ...summary }) => summary);
+	return loadRules().map(({ html, sha256, markdown, ...summary }) => summary);
 }
