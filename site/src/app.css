@@ -1053,3 +1053,123 @@ button {
 		border: 2px solid #555;
 	}
 }
+
+/* Version history */
+.history-link {
+	color: var(--green);
+	border-bottom: 1px solid currentColor;
+}
+.history-heading {
+	display: block;
+	font-size: 0.55em;
+	color: var(--muted);
+	margin-top: 6px;
+}
+.history-empty {
+	color: var(--muted);
+	font-size: 12px;
+}
+.version-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: grid;
+	gap: 12px;
+}
+.version-card {
+	display: block;
+	border: 1px solid var(--line);
+	background: #fbfaf6;
+	padding: 16px 18px;
+	border-radius: 4px;
+	transition: border-color 0.15s;
+}
+.version-card:hover {
+	border-color: var(--green);
+}
+.version-top,
+.version-meta {
+	display: flex;
+	gap: 12px;
+	align-items: center;
+	flex-wrap: wrap;
+	font-size: 11px;
+	color: var(--muted);
+}
+.version-top code {
+	color: var(--ink);
+	font-size: 12px;
+	font-weight: 600;
+}
+.version-subject {
+	margin: 9px 0;
+	font-size: 13px;
+	line-height: 1.7;
+	overflow-wrap: anywhere;
+}
+.diff-count.add {
+	color: #3f6b3a;
+}
+.diff-count.del {
+	color: #9b4a33;
+}
+.version-hash {
+	font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+code.hash {
+	font-size: 10px;
+	overflow-wrap: anywhere;
+}
+.version-diff h2,
+.version-body-title {
+	font-family: var(--serif);
+	font-weight: 500;
+	font-size: 20px;
+	border-bottom: 1px solid var(--line);
+	padding-bottom: 12px;
+	margin: 36px 0 18px;
+}
+.diff-block {
+	border: 1px solid var(--line);
+	border-radius: 4px;
+	overflow: hidden;
+	font-size: 13px;
+	line-height: 1.9;
+	background: #fbfaf6;
+}
+.diff-line {
+	display: grid;
+	grid-template-columns: 26px minmax(0, 1fr);
+	padding: 4px 12px 4px 0;
+}
+.diff-mark {
+	text-align: center;
+	color: var(--muted);
+	user-select: none;
+}
+.diff-text {
+	overflow-wrap: anywhere;
+	white-space: pre-wrap;
+}
+.diff-add {
+	background: #e6efdf;
+}
+.diff-del {
+	background: #f6e4dc;
+}
+.diff-add ins {
+	background: #bcd7ae;
+	text-decoration: none;
+	border-radius: 2px;
+}
+.diff-del del {
+	background: #ecbfac;
+	border-radius: 2px;
+}
+.diff-gap {
+	color: var(--muted);
+	font-size: 11px;
+	text-align: center;
+	padding: 4px;
+	border-block: 1px dashed var(--line);
+}

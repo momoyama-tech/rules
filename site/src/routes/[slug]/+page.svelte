@@ -42,6 +42,8 @@
 			><span
 				>{document.dateLabel}
 				<time datetime={document.date}>{document.date.replaceAll('-', '.')}</time></span
+			><a class="history-link" href={resolve('/[slug]/history', { slug: document.slug })}
+				>版の履歴を見る <span aria-hidden="true">↗</span></a
 			>
 		</div>
 		<div class="document-notice" class:proposal-notice={document.status === 'proposed'}>
@@ -66,9 +68,11 @@
 			<a
 				href={`https://github.com/momoyama-tech/rules/blob/${encodeURIComponent(data.sourceRef)}/rules/${document.file}`}
 				>Markdown原文 <span aria-hidden="true">↗</span></a
+			><a href={resolve('/[slug]/history', { slug: document.slug })}
+				>版の履歴・変更点 <span aria-hidden="true">↗</span></a
 			><a
 				href={`https://github.com/momoyama-tech/rules/commits/${encodeURIComponent(data.sourceRef)}/rules/${document.file}`}
-				>変更履歴 <span aria-hidden="true">↗</span></a
+				>GitHubの変更履歴 <span aria-hidden="true">↗</span></a
 			><a href="https://github.com/momoyama-tech/rules/pulls"
 				>改定の提案 <span aria-hidden="true">↗</span></a
 			>
