@@ -14,6 +14,6 @@ export function load({ params }) {
 	if (!document) error(404, '文書が見つかりません');
 	const version = loadVersion(document.file, params.commit);
 	if (!version) error(404, 'この版が見つかりません');
-	const { html, ...summary } = document;
+	const { html, markdown, ...summary } = document;
 	return { document: summary, version };
 }

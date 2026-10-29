@@ -94,6 +94,13 @@
 				<p>「交通費」「投票」「予算」など、別のキーワードで探してください。</p>
 				<button class="text-button" onclick={() => (query = '')}>検索をクリア</button>
 			</div>{/if}
+		{#if data.documents.some((document) => document.status === 'proposed')}<a
+				class="proposals-callout"
+				href={resolve('/proposals')}
+				><strong>審議中の案</strong><span
+					>承認を求めている変更・追加と、議決の対象版をまとめています。</span
+				><span aria-hidden="true">↗</span></a
+			>{/if}
 		<p class="source-notice">
 			<span aria-hidden="true">ⓘ</span>
 			{data.documents.some((document) => document.status === 'proposed')
