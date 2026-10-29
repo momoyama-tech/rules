@@ -59,9 +59,11 @@
 					<dd>
 						{#if document.base}<code>{document.base.shortSha}</code>（{formatDate(
 								document.base.date
-							)}）・<span class="diff-count add">+{document.added}</span>
-							<span class="diff-count del">−{document.removed}</span
-							>{:else if document.baseMissing}比較元の履歴を取得できません{:else}なし（新規の文書）{/if}
+							)}）・{#if document.added + document.removed === 0}本文の変更なし{:else}<span
+									class="diff-count add">+{document.added}</span
+								>
+								<span class="diff-count del">−{document.removed}</span
+								>{/if}{:else if document.baseMissing}比較元の履歴を取得できません{:else}なし（新規の文書）{/if}
 					</dd>
 				</div>
 				<div>
